@@ -6,5 +6,5 @@ LABEL git_commit=$GIT_COMMIT
 ARG COMMIT_DATE=unspecified
 LABEL commit_date=$COMMIT_DATE
 
-COPY /target/*.jar /usr/app/app.jar
+COPY /target/*-*.jar /usr/app/app.jar
 CMD [ "java", "-jar", "/usr/app/app.jar" ]
