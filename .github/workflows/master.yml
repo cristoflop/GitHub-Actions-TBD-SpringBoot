@@ -43,7 +43,7 @@ jobs:
         with:
           timeZone: 8
           format: 'YYYYMMDDHHmmss'
-      - name: Usage
+      - name: TimeStamp to ENV VARIABLE
         env:
           TIME: "${{ steps.time.outputs.time }}"
         run: |
