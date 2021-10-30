@@ -85,7 +85,7 @@ jobs:
       - name: Push image to DockerHub
         run: |
           IMAGE_VERSION=${{ env.APP_VERSION }}
-          docker tag $IMAGE_NAME docker.pkg.github.com/$IMAGE_USER/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME ${{ secrets.DOCKERHUB_ORG }}/$IMAGE_NAME:latest
           docker tag $IMAGE_NAME ${{ secrets.DOCKERHUB_ORG }}/$IMAGE_NAME:$IMAGE_VERSION
           docker push --all-tags ${{ secrets.DOCKERHUB_ORG }}/$IMAGE_NAME
       - name: Login to Docker GitHub Packages
