@@ -46,7 +46,9 @@ jobs:
         env:
           TIME: "${{ steps.time.outputs.time }}"
       - name: Publish package
-        run: mvn --batch-mode deploy source:jar -Dversion=$TIME-${{ env.APP_VERSION }} -DskipTests
+        run: |
+          mvn versions:set -DnewVersion=$TIME-${{ env.APP_VERSION }}
+          mvn --batch-mode deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload artifact
