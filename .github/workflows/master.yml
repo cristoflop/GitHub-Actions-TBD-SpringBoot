@@ -45,7 +45,7 @@ jobs:
           format: 'YYYYMMDDHHmmss'
       - name: Publish package
         run: |
-          mvn versions:set -DnewVersion=$TIME-${{ env.APP_VERSION }}
+          mvn versions:set -DnewVersion=$TIME--${{ env.APP_VERSION }}
           mvn --batch-mode deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
