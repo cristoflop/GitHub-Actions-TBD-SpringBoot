@@ -1,0 +1,57 @@
+name: Master workflow
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Java application and run test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Run unitary test
+        run: mvn -B -Dtest=BookServiceUnitaryTest test
+      - name: Run REST test
+        run: mvn -B -Dtest=RestTest test
+      - name: Run e2e test
+        run: mvn -B -Dtest=SeleniumTest test
+
+  publish-github-packages:
+    name: Upload Maven Artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build project with Maven
+        run: mvn -B package -DskipTests
+      - name: Set app version to env var
+        run: echo "APP_VERSION=$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)" >> $GITHUB_ENV
+      - name: Get Time
+        id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 8
+          format: 'YYYY-MM-DD-HH-mm-ss'
+        env:
+          TIME: "${{ steps.time.outputs.time }}"
+      - name: Publish package
+        run: mvn --batch-mode deploy -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: target
+          path: target
+          retention-days: 1
